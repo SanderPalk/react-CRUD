@@ -1,6 +1,5 @@
 name: Cypress run
 on: [push]
-jobs:
   test:
     uses: cypress-io/github-action@v2
     with:
