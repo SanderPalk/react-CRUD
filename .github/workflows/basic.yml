@@ -1,4 +1,5 @@
-name: ci
+name: Cypress test
+uses: cypress-io/github-action@v2.2.7
 on: [push]
 jobs:
   test:
