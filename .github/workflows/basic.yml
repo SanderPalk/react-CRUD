@@ -1,10 +1,13 @@
-name: End-to-end tests
+name: ci
 on: [push]
 jobs:
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      # Install NPM dependencies, cache them correctly
-      # and run all Cypress tests
-      - name: Cypress run
-        uses: cypress-io/github-action@v2
+  test:
+    # use the reusable workflow to check out the code, install dependencies
+    # and run the Cypress tests
+    # https://github.com/bahmutov/cypress-workflows
+    uses: bahmutov/cypress-workflows/.github/workflows/standard.yml@v1
+    with:
+      start: 'npm start'
+      working-directory: react-CRUD/crud-app
+      config-file: cypress.config.js
+
