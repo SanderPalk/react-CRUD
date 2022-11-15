@@ -1,11 +1,8 @@
-name: ci
+name: Cypress run
 on: [push]
 jobs:
   test:
-    # use the reusable workflow to check out the code, install dependencies
-    # and run the Cypress tests
-    # https://github.com/bahmutov/cypress-workflows
-    uses: bahmutov/cypress-workflows/.github/workflows/standard.yml@v1
+    uses: cypress-io/github-action@v2
     with:
       start: 'npm start'
       working-directory: react-CRUD/crud-app
