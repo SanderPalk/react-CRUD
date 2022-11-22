@@ -1,13 +1,12 @@
-name: ci
-on: [push]
+name: With server
+on: [ push ]
 jobs:
-  test:
-    # use the reusable workflow to check out the code, install dependencies
-    # and run the Cypress tests
-    # https://github.com/bahmutov/cypress-workflows
-    uses: cypress-io/github-action@v2
-    with:
-      start: 'npm start'
-      working-directory: react-CRUD/crud-app
-      config-file: cypress.config.js
-
+  cypress-run:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cypress run
+        uses: cypress-io/github-action@v4
+        with:
+          start: npm run dev
