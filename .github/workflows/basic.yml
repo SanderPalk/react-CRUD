@@ -1,12 +1,11 @@
-name: With server
+name: ci
 on: [push]
 jobs:
-  cypress-run:
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Cypress run
-        uses: cypress-io/github-action@v4
-        with:
-          start: npm run dev
+  test:
+    # use the reusable workflow to check out the code, install dependencies
+    # and run the Cypress tests
+    # https://github.com/bahmutov/cypress-workflows
+    uses: bahmutov/cypress-workflows/.github/workflows/standard.yml@v1
+    with:
+      start: 'npm start'
+      config-file: cypress.config.js
