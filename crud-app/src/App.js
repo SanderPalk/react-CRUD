@@ -5,18 +5,20 @@ import {Picture} from "./components/Home";
 export default function App() {
     const [photos, setPhotos] = useState([]);
 
-    const api = "https://jsonplaceholder.typicode.com/photos/"
+    const api = "http://localhost:8080/photos"
 
     useEffect(() => {
         fetchData();
     }, []);
 
     const fetchData = async () => {
-        await fetch(api + "?_limit=10")
+        await fetch(api)
             .then((response) => response.json())
             .then((data) => setPhotos(data))
             .catch((error) => console.log(error));
     };
+
+    const token = localStorage.getItem('token')
 
     const onAdd = async (title, url) => {
         await fetch( api, {
@@ -26,6 +28,7 @@ export default function App() {
                 url: url,
             }),
             headers: {
+                'Authorization': 'Basic + base64.encode(admin:password)',
                 "Content-type": "application/json; charset=UTF-8"
             }
         })
@@ -43,7 +46,7 @@ export default function App() {
     };
 
     const onEdit = async (id, title, url) => {
-        await fetch(api + {id}, {
+        await fetch(api + "/" + {id}, {
             method: "PUT",
             body: JSON.stringify({
                 title: title,
@@ -77,7 +80,7 @@ export default function App() {
     };
 
     const onDelete = async (id) => {
-        await fetch(api + {id}, {
+        await fetch(api + "/" + {id}, {
             method: "DELETE"
         })
             .then((response) => {

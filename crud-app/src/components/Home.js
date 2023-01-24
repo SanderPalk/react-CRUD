@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+
 export const Picture = ({ title, url, id, onEdit, onDelete }) => {
     const [isEdit, setIsEdit] = useState(false);
 
