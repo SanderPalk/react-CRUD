@@ -29,9 +29,11 @@ export const Picture = ({ title, url, id, onEdit, onDelete }) => {
             ) : (
                 <div className="photo">
                     <span className="title">{title}</span>
-                    <img src={url} width={"10%"} height={"10%"}/>
-                    <button onClick={handleEdit}>Edit</button>
-                    <button onClick={handleDelete}>Delete</button>
+                    <img className="image" src={url} width={"10%"} height={"10%"}/>
+                    <div>
+                        <button onClick={handleEdit}>Edit</button>
+                        <button onClick={handleDelete}>Delete</button>
+                    </div>
                 </div>
             )}
         </div>
