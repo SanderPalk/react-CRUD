@@ -11,3 +11,12 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.table {
+  border-collapse: collapse;
+}
+
+.logTable td {
+  border: 1px solid;
+  border-radius: 5px;
+}

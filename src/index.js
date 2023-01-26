@@ -7,9 +7,9 @@ import Photos from "./components/Photos";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  <React.Suspense>
     <Photos />
-  </React.StrictMode>
+  </React.Suspense>
 );
 
 // If you want to start measuring performance in your app, pass a function

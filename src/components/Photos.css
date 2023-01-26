@@ -1,0 +1,13 @@
+.photo {
+    max-width: 150px;
+    max-height: inherit;
+}
+
+body {
+    align-content: center;
+    text-align: center;
+}
+
+.photoModal {
+    border: 1px black;
+}

@@ -8,10 +8,8 @@ import HandleError from "./HandleError";
 function PhotoFormModal(props) {
     const [show, setShow] = useState(false);
     const [state, setState] = React.useState({
-
         title: "",
         url: "",
-
     })
 
     function handleChange(evt)  {
@@ -25,15 +23,18 @@ function PhotoFormModal(props) {
     function updatePhoto() {
         const api = "http://localhost:8080/photos/" + props.photo.id
         let updatedPost = { ...state };
+        updatedPost.id = props.photo.id
         updatedPost.title = !!state.title ? state.title : props.photo.title
         updatedPost.url = !!state.url ? state.url : props.photo.url
-        updatedPost.thumbnail = "string"
-        updatedPost.albumId = 0
+        updatedPost.thumbnail = props.photo.thumbnail
+        updatedPost.albumId = props.photo.albumId
         axios.put(api, updatedPost, {
             auth: {
                 username: 'admin',
                 password: 'password'
             }
+        }).then(() => {
+            window.location.reload();
         })
     }
 
@@ -44,6 +45,8 @@ function PhotoFormModal(props) {
                 username: 'admin',
                 password: 'password'
             }
+        }).then(() => {
+            window.location.reload();
         })
     }
 
@@ -83,7 +86,7 @@ function PhotoFormModal(props) {
                 <Button className="btn-dark" onClick={handleShow}>
                     Add New Photo
                 </Button>
-                <Modal show={show} onHide={handleClose}>
+                <Modal show={show} className="photoModal" onHide={handleClose}>
                     <Modal.Header>
                         <Modal.Title>Add Photo</Modal.Title>
                     </Modal.Header>
@@ -92,7 +95,6 @@ function PhotoFormModal(props) {
                         <input type="text" className="form-control" id="title" name="title"  onChange={handleChange} placeholder="title"></input>
                         <label htmlFor="url">URL: </label>
                         <input type="text" className="form-control" id="url" name="url" onChange={handleChange} placeholder="URL"></input>
-                        <label htmlFor="thumbNailUrl">Thumbnail: </label>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={handleClose}>

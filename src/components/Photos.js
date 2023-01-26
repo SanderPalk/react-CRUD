@@ -1,8 +1,10 @@
 import axios from "axios";
-import {Client} from '@stomp/stompjs';
+import Stomp from 'stompjs';
 import React from "react";
 import PhotoFormModal from "./PhotoFormModal";
 import HandleError from "./HandleError";
+import Logs from "./Logs";
+import "./Photos.css";
 
 class Photos extends React.Component {
     constructor(props) {
@@ -26,26 +28,29 @@ class Photos extends React.Component {
 
     WebsocketLogic() {
         const SOCKET_URL = 'ws://localhost:8080/websocket';
-        let onConnected = () => {
-            console.log("Connected!")
-            client.subscribe('/photos', (msg) => {
-                if (msg.body) {
-                    var Data = JSON.parse(msg.body);
+        this.client = Stomp.client(SOCKET_URL);
+        this.client.connect({}, () => {
+            this.client.subscribe('/photos', message => {
+                const json = JSON.parse(message.body)
+                const method = json [0]
+                const body = json[1]
+
+                switch (method) {
+                    case "POST":
+                        this.addPhotos(body)
+                        break;
+                    case "PUT":
+                        this.editPhotos(body)
+                        break;
+                    case "DELETE":
+                        this.deletePhotos(body.id)
+                        break;
+                    default:
+                        console.log("Something went wrong")
+                        break;
                 }
-            });
-        }
-        let onDisconnected = () => {
-            console.log("disconnected")
-        }
-        const client = new Client({
-            brokerURL: SOCKET_URL,
-            reconnectDelay: 5000,
-            heartbeatIncoming: 4000,
-            heartbeatOutgoing: 4000,
-            onConnect: onConnected,
-            onDisconnect: onDisconnected
+            })
         })
-        client.activate();
     }
 
     componentDidMount() {
@@ -60,6 +65,10 @@ class Photos extends React.Component {
         this.WebsocketLogic()
     }
 
+    componentWillUnmount() {
+        this.client.disconnect();
+    }
+
     handleDelete = (id) => {
         axios.delete("http://localhost:8080/photos/" + id, {
             auth: {
@@ -67,6 +76,8 @@ class Photos extends React.Component {
                 password: 'password'
             }}).catch(error => {
                 HandleError(error.response)
+        }).then(() => {
+            window.location.reload();
         })
     }
 
@@ -87,7 +98,7 @@ class Photos extends React.Component {
                         <tr key={photo.id}>
                             <td>{photo.id}</td>
                             <td>{photo.title}</td>
-                            <td>{photo.url}</td>
+                            <td><img className="photo" src={photo.url} alt={photo.url}/></td>
                             <td className="d-flex justify-content-end"><PhotoFormModal photo={photo} editPhotos={this.editPhotos}></PhotoFormModal>
                                 <button className="remove btn btn-danger btn-sm ms-3" onClick={()=> {
                                     this.handleDelete(photo.id)}}>
@@ -99,6 +110,7 @@ class Photos extends React.Component {
                     </tbody>
                 </table>
                 <PhotoFormModal photos={this.state.photo} title={this.state.photo} addPhoto={this.addPhotos}/>
+                <Logs></Logs>
             </div>
         );
     }
